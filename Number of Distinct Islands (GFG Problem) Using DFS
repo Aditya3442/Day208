@@ -1,0 +1,54 @@
+class Pair{
+    int x;
+    int y;
+    Pair(int x , int y) {
+        this.x = x;
+        this.y = y;
+    }
+    @Override
+    public boolean equals(Object o) {
+        Pair pair = (Pair) o;
+        return x == pair.x && y == pair.y;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
+    }
+}
+class Solution {
+    int directions[][] = {{0 , 1} , {1 , 0} , {0 , -1} , {-1 , 0}};
+    
+    public void dfs(int i , int j , boolean[][] visited , int basei , int basej, List<Pair> list , int[][] grid) {
+        int n = grid.length;
+        int m = grid[0].length;
+        visited[i][j] = true;
+        list.add(new Pair(i - basei , j - basej));
+        
+        for(int[] dir : directions) {
+            int x = i + dir[0];
+            int y = j + dir[1];
+            
+            if(x >= 0 && x < n  && y >= 0 && y < m  && grid[x][y] == 1 && !visited[x][y]) {
+                dfs(x , y , visited , basei , basej , list , grid);
+            }
+        }
+    }
+    int countDistinctIslands(int[][] grid) {
+        // Your Code here
+        int n = grid.length;
+        int m = grid[0].length;
+        boolean visited[][] = new boolean[n][m];
+        Set<List<Pair>> set = new HashSet<>();
+        for(int i = 0; i < n; i++) {
+            for(int j = 0; j < m; j++) {
+                if(grid[i][j] == 1 && !visited[i][j]) {
+                    List<Pair> list = new ArrayList<>();
+                    dfs(i , j , visited , i , j , list , grid);
+                    set.add(list);
+                }
+            }
+        }
+        return set.size();
+    }
+}
